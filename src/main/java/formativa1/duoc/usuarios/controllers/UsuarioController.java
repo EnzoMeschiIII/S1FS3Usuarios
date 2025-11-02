@@ -18,10 +18,13 @@ import formativa1.duoc.usuarios.dtos.UsuarioDTO;
 import formativa1.duoc.usuarios.entidades.Usuario;
 import formativa1.duoc.usuarios.services.UsuarioService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
+
     @Autowired
     private UsuarioService usuarioService;
 
