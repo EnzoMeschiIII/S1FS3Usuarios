@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import formativa1.duoc.usuarios.dtos.UsuarioDTO;
 import formativa1.duoc.usuarios.entidades.Usuario;
 import formativa1.duoc.usuarios.services.UsuarioService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -54,23 +56,29 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> guardarUsuario(@RequestBody Usuario usuario)
+    public ResponseEntity<Usuario> guardarUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO)
     {
+        
+        Usuario usuario = new Usuario();
+        usuario.setNombre(usuarioDTO.getNombre());
+        usuario.setEmail(usuarioDTO.getEmail());
+        usuario.setClave(usuarioDTO.getClave());
+        usuario.setRol(usuarioDTO.getRol());
         Usuario nuevoUsuario = usuarioService.guardarUsuario(usuario);
         return ResponseEntity.ok(nuevoUsuario);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario)
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable int id,@Valid @RequestBody Usuario usuarioDTO)
     {
         Optional<Usuario> usuarioExistente = usuarioService.obtenerUsuarioPorId(id);
         if(usuarioExistente.isPresent())
         {
             Usuario user = usuarioExistente.get();
-            user.setNombre(usuario.getNombre());
-            user.setEmail(usuario.getEmail());
-            user.setClave(usuario.getClave());
-            user.setRol(usuario.getRol());
+            user.setNombre(usuarioDTO.getNombre());
+            user.setEmail(usuarioDTO.getEmail());
+            user.setClave(usuarioDTO.getClave());
+            user.setRol(usuarioDTO.getRol());
             Usuario usuarioActualizado = usuarioService.guardarUsuario(user);
             return ResponseEntity.ok(usuarioActualizado);
         }
