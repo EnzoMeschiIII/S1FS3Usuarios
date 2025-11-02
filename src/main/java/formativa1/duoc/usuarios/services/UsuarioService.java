@@ -26,6 +26,10 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
+        public Usuario login(String email, String clave) {
+        return usuarioRepository.findByEmailAndClave(email, clave);
+    }
+
     public Usuario guardarUsuario(Usuario usuario)
     {
         return usuarioRepository.save(usuario);

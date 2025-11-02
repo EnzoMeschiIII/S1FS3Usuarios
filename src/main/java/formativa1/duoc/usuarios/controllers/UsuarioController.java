@@ -23,6 +23,23 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    //Login primer intento
+     @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Usuario datosLogin) {
+        Usuario usuario = usuarioService.login(datosLogin.getEmail(), datosLogin.getClave());
+
+        if (usuario == null) {
+            return ResponseEntity.status(401).body("Credenciales incorrectas");
+        }
+
+        // Simulación de redirección
+        if (usuario.getRol().equalsIgnoreCase("Admin")) {
+            return ResponseEntity.ok("Bienvenido ADMIN");
+        } else {
+            return ResponseEntity.ok("Bienvenido USUARIO");
+        }
+    }
+
     //Metodos de solicitudes http
     @GetMapping
     public List<Usuario> obtenerTodosLosUsuarios()
