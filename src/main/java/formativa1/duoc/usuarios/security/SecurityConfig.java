@@ -18,23 +18,24 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
-    
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        .cors(Customizer.withDefaults())
-        .authorizeHttpRequests(authz -> authz
-        .requestMatchers("/api/**").authenticated()
-        .anyRequest().permitAll()
-        )
-        .httpBasic(Customizer.withDefaults());
+            .cors(Customizer.withDefaults())
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
+            )
+            .httpBasic(Customizer.withDefaults());
+
         return http.build();
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://duoc.cl");
@@ -44,24 +45,25 @@ public class SecurityConfig {
         configuration.addAllowedMethod("DELETE");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
     @Bean
-    public UserDetailsService UserDetailsService(){
+    public UserDetailsService userDetailsService() {
         UserDetails user = User.builder()
-        .username("user")
-        .password(passwordEncoder().encode("password"))
-        .roles("USER")
-        .build();
+            .username("user")
+            .password(passwordEncoder().encode("password"))
+            .roles("USER")
+            .build();
+
         return new InMemoryUserDetailsManager(user);
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-
     }
 }
