@@ -22,13 +22,11 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                
+                .requestMatchers("/api/usuarios/login").permitAll()
                 .requestMatchers("/api/**").permitAll()
-                
                 .anyRequest().permitAll()
-            );
-
+            )
+            .httpBasic(httpBasic -> httpBasic.disable());
         return http.build();
     }
 
